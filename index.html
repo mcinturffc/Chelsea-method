@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Chelsea">
+<meta name="theme-color" content="#FFFBEF">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<title>The Chelsea Method</title>
+<style>
+:root{
+  --bg:#FFFBEF; --card:#FFFFFF; --butter:#FFF3C9; --butter2:#FFE99F;
+  --gold:#E3B23C; --gold-dk:#B8860B; --ink:#4A3F2A; --ink-soft:#8A7B5C;
+  --blush:#F9D5DC; --blush-dk:#D98A9C; --green:#9CC5A1; --green-dk:#5B8C5F;
+  --shadow:0 4px 18px rgba(190,160,80,.14);
+  --r:20px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:16px; overscroll-behavior-y:contain;}
+body{padding-bottom:calc(84px + env(safe-area-inset-bottom));}
+h1,h2,h3,.serif{font-family:Georgia,"Times New Roman",serif;}
+#app{max-width:520px;margin:0 auto;padding:14px 14px 0;}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:16px;margin-bottom:14px;}
+.card.soft{background:linear-gradient(160deg,#FFFDF4,var(--butter));}
+.card.blush{background:linear-gradient(160deg,#FFF9F5,var(--blush));}
+.hdr{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 14px;}
+.hdr h1{font-size:24px;margin:0;font-style:italic;color:var(--gold-dk);}
+.hdr .date{font-size:13px;color:var(--ink-soft);text-align:right;line-height:1.35;}
+.pill{display:inline-block;border:none;border-radius:999px;padding:10px 18px;
+  font-size:15px;font-weight:600;background:var(--butter2);color:var(--ink);
+  box-shadow:0 2px 8px rgba(190,160,80,.18);cursor:pointer;}
+.pill.gold{background:linear-gradient(135deg,#F7D774,#E9B949);color:#5C4508;}
+.pill.blushp{background:linear-gradient(135deg,#FBDDE4,#F3B8C6);color:#7A3B4E;}
+.pill.ghost{background:#FFF;border:1.5px solid var(--butter2);box-shadow:none;}
+.pill.sm{padding:6px 12px;font-size:13px;}
+.pill:active{transform:scale(.97);}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.spread{display:flex;justify-content:space-between;align-items:center;}
+.muted{color:var(--ink-soft);font-size:13px;}
+.big{font-size:20px;font-weight:700;}
+/* progress ring */
+.ringwrap{display:flex;align-items:center;gap:16px;}
+.ring{position:relative;width:92px;height:92px;flex:none;}
+.ring svg{transform:rotate(-90deg);}
+.ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:20px;color:var(--gold-dk);}
+/* blocks */
+.block{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  margin-bottom:12px;overflow:hidden;}
+.block .bhead{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(135deg,var(--butter),#FFF9E2);cursor:pointer;}
+.block.current .bhead{background:linear-gradient(135deg,#F7D774,#FFE99F);}
+.block.done-block .bhead{background:linear-gradient(135deg,#E7F2E8,#F2F8F2);}
+.block .bname{font-weight:700;font-size:15px;}
+.block .btime{font-size:12.5px;color:var(--ink-soft);font-weight:600;}
+.block.prot .bhead{background:linear-gradient(135deg,var(--blush),#FDF0F3);}
+.tasks{padding:4px 8px 8px;}
+.task{display:flex;align-items:flex-start;gap:10px;padding:9px 8px;border-radius:12px;}
+.task:active{background:var(--butter);}
+.task .cb{flex:none;width:26px;height:26px;border-radius:9px;border:2px solid var(--gold);
+  background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;margin-top:1px;}
+.task.done .cb{background:var(--gold);border-color:var(--gold);}
+.task.done .tl{text-decoration:line-through;color:var(--ink-soft);}
+.task .tl{font-size:15px;line-height:1.35;padding-top:2px;}
+.task.crit .tl{font-weight:700;}
+.task.crit .cb{border-color:var(--blush-dk);}
+.task.crit.done .cb{background:var(--blush-dk);}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;
+  background:var(--blush);color:#94465C;margin-left:6px;vertical-align:middle;}
+.badge.gold{background:var(--butter2);color:var(--gold-dk);}
+/* nav */
+#nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,253,244,.96);
+  backdrop-filter:blur(10px);border-top:1px solid #F0E6C8;display:flex;
+  padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:50;}
+#nav button{flex:1;background:none;border:none;font-size:11px;color:var(--ink-soft);
+  padding:6px 2px;border-radius:14px;cursor:pointer;font-weight:600;}
+#nav button .ico{display:block;font-size:21px;margin-bottom:2px;}
+#nav button.on{color:var(--gold-dk);background:var(--butter);}
+/* modal */
+#overlay{position:fixed;inset:0;background:rgba(74,63,42,.45);z-index:100;display:none;
+  align-items:flex-end;justify-content:center;}
+#overlay.show{display:flex;}
+#modal{background:var(--bg);border-radius:24px 24px 0 0;width:100%;max-width:520px;
+  max-height:86vh;overflow-y:auto;padding:20px 18px calc(24px + env(safe-area-inset-bottom));}
+#modal h2{margin:0 0 4px;font-size:20px;color:var(--gold-dk);}
+input[type=text],input[type=time],input[type=number],textarea,select{
+  width:100%;padding:12px;border:1.5px solid var(--butter2);border-radius:14px;
+  font-size:16px;background:#fff;color:var(--ink);font-family:inherit;margin:6px 0;}
+textarea{min-height:80px;resize:vertical;}
+/* verse cards */
+.verse{font-style:italic;line-height:1.55;font-size:15.5px;}
+.vref{font-weight:700;font-size:13px;color:var(--gold-dk);margin-top:8px;font-style:normal;}
+.blush .vref{color:var(--blush-dk);}
+/* timer */
+#timerbar{position:fixed;top:0;left:0;right:0;z-index:60;background:linear-gradient(135deg,#F7D774,#E9B949);
+  color:#5C4508;display:none;align-items:center;justify-content:space-between;
+  padding:10px 16px calc(10px);font-weight:700;box-shadow:0 2px 12px rgba(0,0,0,.15);}
+#timerbar.show{display:flex;}
+/* confetti */
+.cf{position:fixed;top:-12px;width:9px;height:14px;z-index:200;pointer-events:none;
+  animation:fall linear forwards;border-radius:2px;}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.9;}}
+.chip{display:inline-block;padding:7px 14px;border-radius:999px;background:#fff;
+  border:1.5px solid var(--butter2);font-size:13.5px;font-weight:600;margin:3px 4px 3px 0;cursor:pointer;}
+.chip.on{background:var(--gold);color:#fff;border-color:var(--gold);}
+.listitem{display:flex;align-items:center;gap:10px;padding:10px 6px;border-bottom:1px solid #F6EED4;}
+.listitem:last-child{border-bottom:none;}
+.listitem .grow{flex:1;}
+.xbtn{background:none;border:none;color:var(--ink-soft);font-size:17px;padding:4px 8px;cursor:pointer;}
+.duechip{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;}
+.due-over{background:#FBE3E3;color:#A94B4B;}
+.due-today{background:var(--butter2);color:var(--gold-dk);}
+.due-ok{background:#EAF4EB;color:var(--green-dk);}
+.nudge{border:2px dashed var(--gold);background:var(--butter);}
+.winline{padding:9px 4px;border-bottom:1px solid #F6EED4;font-size:14.5px;line-height:1.4;}
+.winline .wd{font-size:11.5px;color:var(--ink-soft);font-weight:700;}
+.tabbtns{display:flex;gap:8px;margin-bottom:12px;}
+.tabbtns .pill{flex:1;text-align:center;}
+.sec-title{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-soft);margin:18px 4px 8px;}
+.fade{animation:fadein .3s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.center{text-align:center;}
+.heart{color:var(--blush-dk);}
+</style>
+</head>
+<body>
+<div id="timerbar">
+  <span id="timerphase">Focus</span>
+  <span id="timerclock" class="serif" style="font-size:20px;">50:00</span>
+  <span>
+    <button class="pill sm" id="timerpause" onclick="timerToggle()">Pause</button>
+    <button class="pill sm" onclick="timerStop()">End</button>
+  </span>
+</div>
+<div id="app"></div>
+<nav id="nav">
+  <button data-v="today" class="on"><span class="ico">☀️</span>Today</button>
+  <button data-v="chores"><span class="ico">🫧</span>Chores</button>
+  <button data-v="lists"><span class="ico">🛒</span>Lists</button>
+  <button data-v="wins"><span class="ico">💛</span>Wins</button>
+  <button data-v="edit"><span class="ico">⚙️</span>Edit</button>
+</nav>
+<div id="overlay" onclick="if(event.target===this)closeModal()"><div id="modal"></div></div>
+<script>
+"use strict";
+/* ================= DATA ================= */
+const MORNING_MIN = [
+  {n:"Rise & shine",s:"05:00",e:"05:10",tasks:[{id:"wake",t:"Wake up · brush teeth · bathroom"}]},
+  {n:"Workout",s:"05:10",e:"05:35",workout:true,tasks:[{id:"workout",t:"Today's workout (tap the card below ⤵)"}]},
+  {n:"Shower & reset",s:"05:35",e:"05:55",tasks:[{id:"shower",t:"Shower and reset"}]},
+  {n:"Next-day prep",s:"05:55",e:"06:05",tasks:[{id:"prep",t:"Lay out clothes, jewelry, workout clothes"}]},
+  {n:"Makeup & hair",s:"06:05",e:"06:25",tasks:[{id:"glam",t:"Makeup and hair"}]},
+  {n:"Daily prep",s:"06:25",e:"07:00",bible:true,tasks:[
+    {id:"bible",t:"Bible time (10 min) — today's verse below"},
+    {id:"tidy",t:"15-minute tidy"},
+    {id:"office",t:"Office setup — computer, notes (10 min)"}]}
+];
+function eveningStd(){ // Mon/Tue evening (4:30 wind down)
+  return [
+    {n:"Wind down",s:"16:30",e:"17:00",win:"work",tasks:[{id:"wind",t:"Close the workday — then log one win 🏆"}]},
+    {n:"Protected time",s:"17:00",e:"18:00",prot:true,tasks:[{id:"dinner",t:"Dinner prep · read · a show — NO PHONES 🚫📱"}]},
+    {n:"Night reset",s:"18:00",e:"18:30",tasks:[{id:"skincare",t:"Makeup removal · brush teeth"}]},
+    {n:"My time",s:"18:30",e:"21:00",couple:true,tasks:[{id:"mytime",t:"Your time — verse & couple win below 💛"}]}
+  ];
+}
+function eveningLate(){ // Wed/Thu/Fri evening (shifted 30-60 min)
+  return [
+    {n:"Wind down",s:"16:30",e:"17:30",win:"work",tasks:[{id:"wind",t:"Close the workday — then log one win 🏆"}]},
+    {n:"Protected time",s:"17:30",e:"18:30",prot:true,tasks:[{id:"dinner",t:"Dinner prep · read · a show — NO PHONES 🚫📱"}]},
+    {n:"Night reset",s:"18:30",e:"19:00",tasks:[{id:"skincare",t:"Makeup removal · brush teeth"}]},
+    {n:"My time",s:"19:00",e:"21:00",couple:true,tasks:[{id:"mytime",t:"Your time — verse & couple win below 💛"}]}
+  ];
+}
+const DEFAULT_ROUTINES = {
+  1:[...MORNING_MIN,
+    {n:"Work · Block 1",s:"07:00",e:"12:00",tasks:[
+      {id:"m-sched",t:"Schedule review (this week + next) · notes of concerns · breakfast & coffee ☕ (7–8)"},
+      {id:"m-invoice",t:"Private Care invoicing (8–9:30)"},
+      {id:"m-admin",t:"Bookkeeping & admin cleanup (9:30–12) — use the 50/10 timer ⏱",timer:true}]},
+    {n:"Lunch & walk",s:"12:00",e:"12:45",tasks:[{id:"lunch",t:"Lunch and a walk 🚶‍♀️"}]},
+    {n:"Work · Block 2",s:"12:45",e:"15:00",tasks:[{id:"m-team",t:"Assist team + additional admin work"}]},
+    {n:"Close out",s:"15:00",e:"16:30",tasks:[{id:"m-emails",t:"Final emails · end-of-day review"}]},
+    ...eveningStd()],
+  2:[...MORNING_MIN,
+    {n:"Work · Block 1",s:"07:00",e:"12:00",tasks:[
+      {id:"t-sched",t:"Schedule review (this week + next) · notes of concerns · breakfast & coffee ☕ (7–8)"},
+      {id:"t-payroll",t:"Payroll + new employee entry (8–12)",timer:true}]},
+    {n:"Lunch & walk",s:"12:00",e:"12:45",tasks:[{id:"lunch",t:"Lunch and a walk 🚶‍♀️"}]},
+    {n:"Work · Block 2",s:"12:45",e:"15:00",tasks:[{id:"t-team",t:"Assist team + additional admin work"}]},
+    {n:"Close out",s:"15:00",e:"16:30",tasks:[{id:"t-emails",t:"Final emails · end-of-day review"}]},
+    ...eveningStd()],
+  3:[...MORNING_MIN,
+    {n:"Work · Block 1",s:"07:00",e:"12:00",tasks:[
+      {id:"w-tutor-email",t:"Email tutoring link — FIRST THING",crit:true},
+      {id:"w-sched",t:"Schedule review + notes · breakfast & coffee ☕ (7:05–8)"},
+      {id:"w-push",t:"Payroll push / weekly set (8–9)"},
+      {id:"w-admin",t:"Admin · bookkeeping · open to helping (9–12)",timer:true}]},
+    {n:"Lunch & walk",s:"12:00",e:"12:45",tasks:[{id:"lunch",t:"Lunch and a walk 🚶‍♀️"}]},
+    {n:"Work · Block 2",s:"12:45",e:"15:00",tasks:[{id:"w-team",t:"Assist team + additional admin work"}]},
+    {n:"Tutoring",s:"15:00",e:"16:00",tasks:[{id:"w-tutor",t:"Tutoring session 📚",crit:true}]},
+    {n:"Close out",s:"16:00",e:"16:30",tasks:[{id:"w-emails",t:"Final emails · end-of-day review"}]},
+    ...eveningLate()],
+  4:[...MORNING_MIN,
+    {n:"Open block",s:"07:00",e:"12:00",open:true,tasks:[
+      {id:"th-avail",t:"Stay available for work calls 📞"},
+      {id:"th-chores",t:"Light house tasks between calls — tap “Fill my time” ⤵"},
+      {id:"th-shop",t:"Grocery shop 🛒 (list is ready in Lists)"}]},
+    {n:"Lunch & walk",s:"12:00",e:"12:45",tasks:[{id:"lunch",t:"Lunch and a walk 🚶‍♀️"}]},
+    {n:"Work · Block 2",s:"12:45",e:"16:00",tasks:[{id:"th-team",t:"Assist team + additional admin work"}]},
+    {n:"Close out",s:"16:00",e:"16:30",tasks:[{id:"th-emails",t:"Final emails · end-of-day review"}]},
+    ...eveningLate()],
+  5:[...MORNING_MIN,
+    {n:"Open block",s:"07:00",e:"12:00",open:true,meeting:true,tasks:[
+      {id:"f-avail",t:"Stay available for work calls 📞"},
+      {id:"f-chores",t:"Light house tasks between calls — tap “Fill my time” ⤵"}]},
+    {n:"Lunch & walk",s:"12:00",e:"12:45",tasks:[{id:"lunch",t:"Lunch and a walk 🚶‍♀️"}]},
+    {n:"Work · Block 2",s:"12:45",e:"16:00",tasks:[{id:"f-team",t:"Assist team + additional admin work"}]},
+    {n:"Close out",s:"16:00",e:"16:30",tasks:[{id:"f-emails",t:"Final emails · end-of-day review"}]},
+    ...eveningLate()]
+};
+const DEFAULT_CHORES = [
+  {id:"c-laundry",n:"Laundry",eff:30,type:"day",day:1,last:null,intr:true},
+  {id:"c-fridge",n:"Fridge clean-out (before shop day)",eff:15,type:"day",day:3,last:null,intr:true},
+  {id:"c-trash",n:"Trash & recycling out",eff:5,type:"day",day:0,last:null,intr:true},
+  {id:"c-vacuum",n:"Vacuum main areas",eff:15,type:"freq",every:3,last:null,intr:true},
+  {id:"c-dust",n:"Dust surfaces",eff:15,type:"freq",every:7,last:null,intr:true},
+  {id:"c-counters",n:"Wipe counters & sink shine",eff:5,type:"freq",every:1,last:null,intr:true},
+  {id:"c-bathrooms",n:"Clean bathrooms",eff:30,type:"freq",every:7,last:null,intr:false},
+  {id:"c-mop",n:"Mop floors",eff:30,type:"freq",every:7,last:null,intr:false},
+  {id:"c-sheets",n:"Wash sheets & remake bed",eff:15,type:"freq",every:14,last:null,intr:true},
+  {id:"c-mail",n:"Sort mail & papers",eff:5,type:"freq",every:3,last:null,intr:true},
+  {id:"c-declutter",n:"10-minute declutter sweep",eff:15,type:"freq",every:2,last:null,intr:true}
+];
+const DEEP_CLEAN = ["Baseboards & door frames","Oven & stovetop deep clean","Windows & mirrors",
+  "Closet purge (one closet)","Under furniture vacuum","Shower & grout deep scrub",
+  "Pantry organize & wipe","Fridge coils & behind appliances","Ceiling fans & vents","Junk drawer reset"];
+const WORKOUTS = [
+  {n:"Lower Body Sculpt",moves:"3 rounds: 15 squats · 12 reverse lunges/leg · 15 glute bridges · 30s wall sit",q:"20 min no equipment lower body workout women build muscle"},
+  {n:"Upper Body Tone",moves:"3 rounds: 10 push-ups (knees ok) · 12 tricep dips · 30s plank shoulder taps · 12 superman lifts",q:"20 min no equipment upper body toning workout"},
+  {n:"Core Tightener",moves:"3 rounds: 30s plank · 15 dead bugs · 12 bicycle crunches · 15 heel touches",q:"20 minute core workout no equipment women"},
+  {n:"Full-Body Strength",moves:"3 rounds: 12 squats · 10 push-ups · 12 alt lunges · 30s plank · 15 glute bridges",q:"25 min full body no equipment strength workout"},
+  {n:"Booty & Hamstrings",moves:"3 rounds: 15 sumo squats · 12 single-leg glute bridges/leg · 15 donkey kicks/leg · 20 fire hydrants",q:"20 min glutes workout no equipment"},
+  {n:"Arms & Shoulders Burn",moves:"3 rounds: 12 pike push-ups · 15 arm circles fwd/back · 10 push-up to side plank · 30s plank up-downs",q:"20 min arms and shoulders workout no weights"},
+  {n:"Low-Impact Total Tone",moves:"3 rounds: 15 squat pulses · 12 knee push-ups · 15 standing side crunches/side · 30s glute bridge hold",q:"20 min low impact toning workout no equipment"},
+  {n:"HIIT Tighten & Tone",moves:"4 rounds, 40s on/20s off: squat to press-up · mountain climbers · reverse lunges · plank jacks",q:"20 minute HIIT workout no equipment women"},
+  {n:"Core + Glutes Combo",moves:"3 rounds: 15 glute bridges · 30s side plank/side · 15 bird dogs · 20 standing marches",q:"20 min core and glutes workout no equipment"},
+  {n:"Total Body Pilates-style",moves:"3 rounds: 12 roll-ups · 15 leg circles/leg · 30s plank · 12 swimming pulses",q:"25 min pilates full body workout no equipment"}
+];
+const VERSES_AM = [
+  ["This is the day that the LORD has made. We will rejoice and be glad in it!","Psalm 118:24"],
+  ["I can do all things through Christ, who strengthens me.","Philippians 4:13"],
+  ["But they who wait for the LORD will renew their strength. They will mount up with wings like eagles.","Isaiah 40:31"],
+  ["Trust in the LORD with all your heart, and don't lean on your own understanding.","Proverbs 3:5"],
+  ["Commit your deeds to the LORD, and your plans shall succeed.","Proverbs 16:3"],
+  ["The LORD is my shepherd; I shall lack nothing.","Psalm 23:1"],
+  ["Be strong and courageous. Don't be afraid... for the LORD your God is with you wherever you go.","Joshua 1:9"],
+  ["In everything give thanks, for this is the will of God in Christ Jesus toward you.","1 Thessalonians 5:18"],
+  ["She is clothed with strength and dignity. She laughs at the time to come.","Proverbs 31:25"],
+  ["Whatever you do, work heartily, as for the Lord, and not for men.","Colossians 3:23"],
+  ["Cast all your worries on him, because he cares for you.","1 Peter 5:7"],
+  ["The steadfast love of the LORD never ceases; his mercies never come to an end; they are new every morning.","Lamentations 3:22-23"],
+  ["Don't be anxious for tomorrow... Each day's own evil is sufficient.","Matthew 6:34"],
+  ["Come to me, all you who labor and are heavily burdened, and I will give you rest.","Matthew 11:28"],
+  ["For I know the plans I have for you, says the LORD — plans of peace... to give you hope and a future.","Jeremiah 29:11"],
+  ["Let your light shine before men, that they may see your good works.","Matthew 5:16"],
+  ["The joy of the LORD is your strength.","Nehemiah 8:10"],
+  ["Delight yourself in the LORD, and he will give you the desires of your heart.","Psalm 37:4"],
+  ["God is our refuge and strength, a very present help in trouble.","Psalm 46:1"],
+  ["Let all that you do be done in love.","1 Corinthians 16:14"],
+  ["Satisfy us in the morning with your loving kindness, that we may rejoice and be glad all our days.","Psalm 90:14"]
+];
+const VERSES_MARRIAGE = [
+  ["Love is patient and is kind... bears all things, believes all things, hopes all things, endures all things.","1 Corinthians 13:4,7"],
+  ["Above all things be earnest in your love among yourselves, for love covers a multitude of sins.","1 Peter 4:8"],
+  ["Two are better than one... For if they fall, the one will lift up his fellow.","Ecclesiastes 4:9-10"],
+  ["I found him whom my soul loves. I held him, and would not let him go.","Song of Solomon 3:4"],
+  ["Set me as a seal on your heart... for love is strong as death. Many waters can't quench love.","Song of Solomon 8:6-7"],
+  ["Be kind to one another, tender-hearted, forgiving each other, just as God also in Christ forgave you.","Ephesians 4:32"],
+  ["Therefore a man will leave his father and his mother, and will join with his wife, and they will be one flesh.","Genesis 2:24"],
+  ["Whoever finds a wife finds a good thing, and obtains favor of the LORD.","Proverbs 18:22"],
+  ["Husbands, love your wives, even as Christ also loved the assembly and gave himself up for it.","Ephesians 5:25"],
+  ["Let marriage be held in honor among all.","Hebrews 13:4"],
+  ["A cord of three strands is not quickly broken.","Ecclesiastes 4:12"],
+  ["Bear with one another, and forgive each other... As Christ forgave you, so you also do.","Colossians 3:13"],
+  ["Live joyfully with the wife whom you love all the days of your life.","Ecclesiastes 9:9"],
+  ["Her husband trusts her from his heart. He safely trusts in her... She does him good, and not harm, all the days of her life.","Proverbs 31:11-12"],
+  ["Love one another from the heart fervently.","1 Peter 1:22"],
+  ["With all lowliness and humility, with patience, bearing with one another in love.","Ephesians 4:2"],
+  ["May the God of perseverance and of encouragement grant you to be of the same mind with one another.","Romans 15:5"],
+  ["A friend loves at all times.","Proverbs 17:17"],
+  ["Now these three remain: faith, hope, and love. But the greatest of these is love.","1 Corinthians 13:13"],
+  ["House and riches are an inheritance from fathers, but a prudent wife is from the LORD.","Proverbs 19:14"],
+  ["Don't let the sun go down on your wrath.","Ephesians 4:26"]
+];
+const ENCOURAGE = ["You're doing it, Chelsea. 💛","Small steps, big life.","Look at you go!","Routine queen. 👑",
+  "One thing at a time — you've got this.","Your future self says thank you.","That's the good stuff.",
+  "Consistency looks beautiful on you.","Another one done. Proud of you!","Jonathan's a lucky man. 😉"];
+const DEFAULT_STATE = {
+  ver:1,
+  settings:{name:"Chelsea",partner:"Jonathan",appName:"The Chelsea Method",checkins:["12:30","15:30"],shopDay:4},
+  routines:DEFAULT_ROUTINES,
+  chores:DEFAULT_CHORES,
+  deepIdx:0, deepLastWeek:null,
+  groceries:[], dinners:["","","","","","",""],
+  wins:[], log:{}
+};
+/* ================= CORE ================= */
+let S;
+function load(){
+  try{ S = JSON.parse(localStorage.getItem("tcm_v1")) || null; }catch(e){ S=null; }
+  if(!S){ S = JSON.parse(JSON.stringify(DEFAULT_STATE)); save(); }
+  if(!S.dinners) S.dinners=["","","","","","",""];
+  if(!S.wins) S.wins=[];
+  if(!S.log) S.log={};
+}
+function save(){ try{ localStorage.setItem("tcm_v1", JSON.stringify(S)); }catch(e){} }
+const $=s=>document.querySelector(s);
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function todayKey(d){ d=d||new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function keyToDate(k){ const p=k.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); }
+function dow(d){ return (d||new Date()).getDay(); }
+function nowMin(){ const n=new Date(); return n.getHours()*60+n.getMinutes(); }
+function tMin(t){ const p=t.split(":"); return +p[0]*60+ +p[1]; }
+function fmtT(t){ let[h,m]=t.split(":").map(Number); const ap=h>=12?"PM":"AM"; h=h%12||12; return h+":"+String(m).padStart(2,"0")+" "+ap; }
+function fmtMin(mins){ let h=Math.floor(mins/60),m=mins%60; const ap=h>=12?"PM":"AM"; h=h%12||12; return h+":"+String(m).padStart(2,"0")+" "+ap; }
+function doy(d){ d=d||new Date(); return Math.floor((d-new Date(d.getFullYear(),0,0))/864e5); }
+function isoWeek(d){ d=new Date(d); d.setHours(0,0,0,0); d.setDate(d.getDate()+3-(d.getDay()+6)%7);
+  const w1=new Date(d.getFullYear(),0,4); return d.getFullYear()+"-"+(1+Math.round(((d-w1)/864e5-3+(w1.getDay()+6)%7)/7)); }
+function dayLog(k){ k=k||todayKey(); if(!S.log[k]) S.log[k]={c:{},extra:[],bDone:[],dDone:false};
+  const L=S.log[k]; if(!L.c)L.c={}; if(!L.extra)L.extra=[]; if(!L.bDone)L.bDone=[]; return L; }
+const DAYN=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+/* ---- chores due logic ---- */
+function daysSince(k){ if(!k) return 999; return Math.round((keyToDate(todayKey())-keyToDate(k))/864e5); }
+function choreDue(c){ // returns days overdue (0 = due today, negative = not yet due)
+  const ds=daysSince(c.last);
+  if(c.type==="freq") return ds-c.every;
+  if(c.type==="day"){ // due on its fixed day if not done in last 6 days
+    if(dow()===c.day && ds>0) return 0;
+    return -1;
+  }
+  return -1;
+}
+function dueChores(interruptibleOnly){
+  return S.chores.filter(c=>choreDue(c)>=0 && (!interruptibleOnly||c.intr))
+    .sort((a,b)=>choreDue(b)-choreDue(a));
+}
+function doneChore(id){ const c=S.chores.find(x=>x.id===id); if(c){c.last=todayKey(); save();} }
+
+/* ---- streak ---- */
+function dayPct(k){
+  const L=S.log[k]; if(!L) return 0;
+  const d=dow(keyToDate(k));
+  let total=0,done=0;
+  if(d===0||d===6){ const sc=L.sched||[]; if(!sc.length) return L.dDone?100:0;
+    total=sc.length; done=sc.filter(x=>x.done).length;
+  }else{
+    (S.routines[d]||[]).forEach(b=>b.tasks.forEach(t=>{total++; if(L.c[t.id])done++;}));
+  }
+  (L.extra||[]).forEach(x=>{total++; if(x.done)done++;});
+  return total?Math.round(done/total*100):0;
+}
+function dayComplete(k){ return dayPct(k)>=70; }
+function streak(){
+  let s=0, d=new Date(), graceByWeek={};
+  if(dayComplete(todayKey(d))) s++;
+  d.setDate(d.getDate()-1);
+  for(let i=0;i<730;i++){
+    const k=todayKey(d);
+    if(dayComplete(k)){ s++; }
+    else{
+      const w=isoWeek(d);
+      if(!graceByWeek[w] && S.log[k]!==undefined||!graceByWeek[w]){ // one grace day per week
+        if(graceByWeek[w]) break;
+        graceByWeek[w]=true;
+        if(s===0 && i===0){ /* yesterday missed, grace it */ }
+      } else break;
+      if(graceByWeek[w]===true && dayComplete(k)===false){
+        // grace consumed, don't increment
+        if(Object.keys(graceByWeek).length>0 && !graceByWeek[w+"_used"]) graceByWeek[w+"_used"]=true;
+        else break;
+      }
+    }
+    d.setDate(d.getDate()-1);
+    // stop if two consecutive misses
+    if(!dayComplete(k)){
+      const k2=todayKey(d);
+      if(!dayComplete(k2)) break;
+    }
+  }
+  return s;
+}
+
+/* ---- confetti & chime ---- */
+function confetti(n){
+  n=n||36; const colors=["#F7D774","#E9B949","#F3B8C6","#FBDDE4","#FFE99F","#D98A9C"];
+  for(let i=0;i<n;i++){
+    const e=document.createElement("div"); e.className="cf";
+    e.style.left=Math.random()*100+"vw";
+    e.style.background=colors[Math.floor(Math.random()*colors.length)];
+    e.style.animationDuration=(1.6+Math.random()*1.4)+"s";
+    e.style.animationDelay=(Math.random()*.4)+"s";
+    e.style.transform="rotate("+Math.random()*360+"deg)";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),3200);
+  }
+}
+let AC=null;
+function chime(kind){
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const notes = kind==="break" ? [523,659,784] : kind==="back" ? [784,659,523] : [659,784];
+    notes.forEach((f,i)=>{
+      const o=AC.createOscillator(),g=AC.createGain();
+      o.type="sine"; o.frequency.value=f; o.connect(g); g.connect(AC.destination);
+      const t=AC.currentTime+i*.22;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.25,t+.03);
+      g.gain.exponentialRampToValueAtTime(.001,t+.5);
+      o.start(t); o.stop(t+.55);
+    });
+  }catch(e){}
+}
+function toast(msg){
+  const t=document.createElement("div");
+  t.style.cssText="position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--ink);color:#FFF9E2;padding:12px 22px;border-radius:999px;z-index:300;font-weight:600;font-size:14.5px;box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:88vw;text-align:center;";
+  t.textContent=msg; document.body.appendChild(t);
+  setTimeout(()=>{t.style.transition="opacity .4s";t.style.opacity="0";},2200);
+  setTimeout(()=>t.remove(),2700);
+}
+function cheer(){ toast(ENCOURAGE[Math.floor(Math.random()*ENCOURAGE.length)]); }
+
+/* ---- modal ---- */
+function openModal(html){ $("#modal").innerHTML=html; $("#overlay").classList.add("show"); }
+function closeModal(){ $("#overlay").classList.remove("show"); }
+
+/* ---- 50/10 timer ---- */
+let TMR={on:false,phase:"focus",left:0,int:null,paused:false};
+function timerStart(){
+  TMR={on:true,phase:"focus",left:50*60,int:null,paused:false};
+  $("#timerbar").classList.add("show");
+  TMR.int=setInterval(timerTick,1000); timerDraw(); chime("back");
+  toast("50/10 timer started. Deep work mode. 💪");
+}
+function timerTick(){
+  if(TMR.paused) return;
+  TMR.left--;
+  if(TMR.left<=0){
+    if(TMR.phase==="focus"){ TMR.phase="break"; TMR.left=10*60; chime("break"); toast("Break time! Stretch, water, breathe. 🌿"); }
+    else{ TMR.phase="focus"; TMR.left=50*60; chime("back"); toast("Back to it — 50 focused minutes. ✨"); }
+  }
+  timerDraw();
+}
+function timerDraw(){
+  const m=Math.floor(TMR.left/60),s=TMR.left%60;
+  $("#timerclock").textContent=m+":"+String(s).padStart(2,"0");
+  $("#timerphase").textContent=TMR.phase==="focus"?"🎯 Focus":"🌿 Break";
+}
+function timerToggle(){ TMR.paused=!TMR.paused; $("#timerpause").textContent=TMR.paused?"Resume":"Pause"; }
+function timerStop(){ clearInterval(TMR.int); TMR.on=false; $("#timerbar").classList.remove("show"); toast("Nice work session! 🏆"); }
+
+/* ---- task check ---- */
+function toggleTask(tid,blockIdx){
+  const L=dayLog(); L.c[tid]=!L.c[tid]; save();
+  const d=dow(); const blocks=S.routines[d]||[];
+  const b=blocks[blockIdx];
+  if(L.c[tid]){
+    if(b && b.tasks.every(t=>L.c[t.id]) && !L.bDone.includes(blockIdx)){
+      L.bDone.push(blockIdx); save(); confetti(30); cheer();
+      if(b.win==="work") setTimeout(()=>promptWin("work"),600);
+    }
+    const pct=dayPct(todayKey());
+    if(pct===100 && !L.dDone){ L.dDone=true; save(); setTimeout(()=>{confetti(90); toast("FULL DAY COMPLETE! You are amazing! 🎉👑");},400); }
+  }
+  render();
+}
+function toggleExtra(i){
+  const L=dayLog(); const x=L.extra[i]; x.done=!x.done;
+  if(x.done && x.choreId) doneChore(x.choreId);
+  save(); if(x.done){confetti(20); cheer();} render();
+}
+function toggleSched(i){
+  const L=dayLog(); const x=L.sched[i]; x.done=!x.done;
+  if(x.done && x.choreId) doneChore(x.choreId);
+  save(); if(x.done){confetti(20); cheer();}
+  const all=L.sched.length&&L.sched.every(s=>s.done);
+  if(all&&!L.dDone){L.dDone=true;save();setTimeout(()=>{confetti(90);toast("Weekend list DONE. Go rest, you earned it! 🎉");},400);}
+  render();
+}
+
+/* ---- wins ---- */
+function promptWin(type){
+  const isW=type==="work";
+  openModal(`<h2>${isW?"🏆 One win from work today?":"💛 One win for you & "+esc(S.settings.partner)+" today?"}</h2>
+  <p class="muted">${isW?"Big or small — what went well?":"A moment, a laugh, a kindness — anything counts."}</p>
+  <textarea id="wintext" placeholder="${isW?"e.g. Cleared the whole invoice pile":"e.g. We actually ate dinner together, no phones"}"></textarea>
+  <div class="row" style="margin-top:8px;">
+    <button class="pill ${isW?"gold":"blushp"}" onclick="saveWin('${type}')">Save win</button>
+    <button class="pill ghost" onclick="closeModal()">Later</button>
+  </div>`);
+}
+function saveWin(type){
+  const v=$("#wintext").value.trim();
+  if(v){ S.wins.unshift({d:todayKey(),type,t:v}); save(); confetti(24); toast(type==="work"?"Win logged! 🏆":"Aww. Saved to your story. 💛"); }
+  closeModal(); render();
+}
+
+/* ---- fill my time ---- */
+let fillEff=null;
+function openFill(){
+  fillEff=null; drawFill();
+}
+function drawFill(){
+  const d=dow(); const interOnly=(d===4||d===5);
+  let pool=dueChores(false);
+  if(fillEff) pool=pool.filter(c=>c.eff<=fillEff);
+  if(interOnly) { /* prefer interruptible first */ pool=pool.sort((a,b)=>(b.intr?1:0)-(a.intr?1:0)||choreDue(b)-choreDue(a)); }
+  const top=pool.slice(0,4);
+  openModal(`<h2>✨ Fill my time</h2>
+  <p class="muted">How much time do you have?</p>
+  <div>
+    <span class="chip ${fillEff===5?"on":""}" onclick="fillEff=5;drawFill()">~5 min</span>
+    <span class="chip ${fillEff===15?"on":""}" onclick="fillEff=15;drawFill()">~15 min</span>
+    <span class="chip ${fillEff===30?"on":""}" onclick="fillEff=30;drawFill()">30+ min</span>
+    <span class="chip ${fillEff===null?"on":""}" onclick="fillEff=null;drawFill()">Any</span>
+  </div>
+  <div style="margin-top:10px;">
+  ${top.length?top.map(c=>{
+    const od=choreDue(c);
+    return `<div class="listitem"><div class="grow"><b>${esc(c.n)}</b><br>
+      <span class="muted">${c.eff} min · ${od>0?od+" day"+(od>1?"s":"")+" overdue":"due today"}${c.intr?" · easy to pause":""}</span></div>
+      <button class="pill sm gold" onclick="acceptFill('${c.id}')">Do it</button></div>`;
+  }).join("")
+  :`<p class="center" style="padding:14px;">Nothing's due — the house is handled! 🎉<br><span class="muted">Enjoy the calm, or peek at the Chores tab for anything ahead.</span></p>`}
+  </div>
+  <button class="pill ghost" style="margin-top:10px;" onclick="closeModal()">Close</button>`);
+}
+function acceptFill(id){
+  const c=S.chores.find(x=>x.id===id);
+  const L=dayLog();
+  if(!L.extra.find(x=>x.choreId===id&&!x.done)){
+    L.extra.push({t:c.n+" ("+c.eff+" min)",choreId:id,done:false}); save();
+  }
+  closeModal(); toast("Added to today. You've got this! 💪"); render();
+}
+
+/* ---- weekend "I'm up" ---- */
+function imUp(){
+  const L=dayLog();
+  const start=nowMin()+30; // 30 min to wake up gently
+  const items=[];
+  items.push({t:"Slow morning — coffee, breakfast, breathe ☕",choreId:null});
+  const due=dueChores(false).slice(0,4);
+  due.forEach(c=>items.push({t:c.n+" ("+c.eff+" min)",choreId:c.id,eff:c.eff}));
+  // deep clean of the week (Saturdays, or Sunday if not done)
+  const wk=isoWeek(new Date());
+  if(S.deepLastWeek!==wk){
+    items.push({t:"Deep task: "+DEEP_CLEAN[S.deepIdx%DEEP_CLEAN.length]+" 🌟",choreId:"DEEP"});
+  }
+  // leftover unchecked from the week (carried forward)
+  const carry=carriedForward().slice(0,2);
+  carry.forEach(t=>items.push({t:"Carried over: "+t,choreId:null}));
+  items.push({t:"Reward break — do something just for you 💛",choreId:null});
+  let t=start;
+  L.sched=items.map(it=>{
+    const dur=it.eff||30;
+    const o={time:fmtMin(t),t:it.t,choreId:it.choreId,done:false};
+    t+=dur+10;
+    return o;
+  });
+  L.sched.push({time:fmtMin(t),t:"Rest guilt-free — the list is done when it's done 🌸",choreId:null,done:false});
+  save(); confetti(30); toast("Good morning, sunshine! Your day is planned. ☀️"); render();
+}
+function carriedForward(){
+  // unchecked tasks from the last 5 weekdays
+  const out=[]; const d=new Date();
+  for(let i=1;i<=5;i++){
+    d.setDate(d.getDate()-1);
+    const wd=dow(d); if(wd===0||wd===6) continue;
+    const k=todayKey(d); const L=S.log[k]; if(!L) continue;
+    (S.routines[wd]||[]).forEach(b=>b.tasks.forEach(t=>{
+      if(!L.c[t.id] && !/wake|shower|makeup|lunch|dinner|teeth|my time|available/i.test(t.t) && out.length<6)
+        out.push(t.t.replace(/\s*[·—-]\s*use the.*$/i,"").slice(0,60));
+    }));
+  }
+  return out;
+}
+
+/* ---- rescue my day ---- */
+function rescue(){
+  const d=dow(); if(d===0||d===6){ imUp(); return; }
+  const L=dayLog(); const now=nowMin();
+  const remaining=[];
+  (S.routines[d]||[]).forEach(b=>{
+    if(tMin(b.e)<=now) return; // block already past — let it go
+    b.tasks.forEach(t=>{ if(!L.c[t.id]) remaining.push({id:t.id,t:t.t,prot:b.prot,bs:b.s}); });
+  });
+  const keep=remaining.slice(0,7);
+  openModal(`<h2>🛟 Rescue my day</h2>
+  <p class="muted">Deep breath. The morning is forgiven — here's what still matters from ${fmtMin(now)} on. Everything else rolls to the weekend, guilt-free.</p>
+  ${keep.map(t=>`<div class="listitem"><div class="grow">${esc(t.t)}${t.prot?' <span class="badge">protected</span>':''}</div></div>`).join("")}
+  <div class="row" style="margin-top:10px;">
+    <button class="pill gold" onclick="closeModal();toast('Fresh start from right now. 💛');">Got it — fresh start</button>
+  </div>`);
+}
+/* ---- friday meeting ---- */
+function setMeeting(){
+  openModal(`<h2>📅 Friday meeting time?</h2>
+  <p class="muted">I'll block the hour so nothing else lands on it.</p>
+  <input type="time" id="mtgtime" value="10:00">
+  <div class="row"><button class="pill gold" onclick="saveMeeting()">Set it</button>
+  <button class="pill ghost" onclick="closeModal()">No meeting today</button></div>`);
+}
+function saveMeeting(){
+  const v=$("#mtgtime").value; if(v){ dayLog().meeting=v; save(); toast("Meeting blocked "+fmtT(v)+"–"+fmtMin(tMin(v)+60)+" 📅"); }
+  closeModal(); render();
+}
+/* ================= VIEWS ================= */
+let VIEW="today";
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{
+  VIEW=b.dataset.v;
+  document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));
+  render();
+});
+function render(){
+  const el=$("#app");
+  if(VIEW==="today") el.innerHTML=vToday();
+  else if(VIEW==="chores") el.innerHTML=vChores();
+  else if(VIEW==="lists") el.innerHTML=vLists();
+  else if(VIEW==="wins") el.innerHTML=vWins();
+  else el.innerHTML=vEdit();
+}
+function header(){
+  const n=new Date();
+  const h=n.getHours();
+  const greet=h<12?"Good morning":h<17?"Good afternoon":"Good evening";
+  return `<div class="hdr"><h1>${esc(S.settings.appName)}</h1>
+  <div class="date"><b>${greet}, ${esc(S.settings.name)}!</b><br>${DAYN[n.getDay()]}, ${n.toLocaleDateString(undefined,{month:"long",day:"numeric"})}</div></div>`;
+}
+/* ---------- TODAY ---------- */
+function vToday(){
+  const d=dow(), k=todayKey(), L=dayLog(k), pct=dayPct(k), st=streak();
+  let h=header();
+  // progress + streak
+  const circ=2*Math.PI*40;
+  h+=`<div class="card soft"><div class="ringwrap">
+    <div class="ring"><svg width="92" height="92"><circle cx="46" cy="46" r="40" fill="none" stroke="#F3E9C8" stroke-width="9"/>
+    <circle cx="46" cy="46" r="40" fill="none" stroke="url(#gg)" stroke-width="9" stroke-linecap="round"
+      stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pct/100)}"/>
+    <defs><linearGradient id="gg"><stop offset="0%" stop-color="#F7D774"/><stop offset="100%" stop-color="#E9A949"/></linearGradient></defs></svg>
+    <div class="pct">${pct}%</div></div>
+    <div><div class="big">${pct===100?"Perfect day! 🎉":pct>=70?"Day complete — anything more is bonus ✨":pct>0?"Beautiful progress 💛":"A fresh page, "+esc(S.settings.name)+" ☀️"}</div>
+    <div class="muted" style="margin-top:4px;">🔥 Streak: <b>${st} day${st===1?"":"s"}</b>${st>0?" — one grace day a week has your back":""}</div></div>
+  </div>
+  <div class="row" style="margin-top:12px;">
+    <button class="pill gold" onclick="openFill()">✨ Fill my time</button>
+    <button class="pill ghost" onclick="rescue()">🛟 Rescue my day</button>
+  </div></div>`;
+  // check-in nudge
+  const nud=checkinNudge();
+  if(nud) h+=nud;
+  // weekend
+  if(d===0||d===6) return h+vWeekend(L);
+  // Friday meeting card
+  if(d===5 && !L.meeting && nowMin()<720)
+    h+=`<div class="card nudge spread"><div><b>📅 Friday meeting</b><br><span class="muted">What time is it today?</span></div>
+    <button class="pill gold sm" onclick="setMeeting()">Set time</button></div>`;
+  if(d===5 && L.meeting)
+    h+=`<div class="card soft spread"><div><b>📅 Team meeting</b><br><span class="muted">${fmtT(L.meeting)} – ${fmtMin(tMin(L.meeting)+60)}</span></div>
+    <span class="badge gold">blocked</span></div>`;
+  // blocks
+  const blocks=S.routines[d]||[];
+  const now=nowMin();
+  blocks.forEach((b,bi)=>{
+    const cur=now>=tMin(b.s)&&now<tMin(b.e);
+    const allDone=b.tasks.every(t=>L.c[t.id]);
+    h+=`<div class="block ${cur?"current":""} ${allDone?"done-block":""} ${b.prot?"prot":""} fade">
+      <div class="bhead"><span class="bname">${allDone?"✓ ":""}${cur?"👉 ":""}${esc(b.n)}${b.prot?' <span class="badge">no phones</span>':""}</span>
+      <span class="btime">${fmtT(b.s)}–${fmtT(b.e)}</span></div>
+      <div class="tasks">`;
+    b.tasks.forEach(t=>{
+      h+=`<div class="task ${L.c[t.id]?"done":""} ${t.crit?"crit":""}" onclick="toggleTask('${t.id}',${bi})">
+        <div class="cb">${L.c[t.id]?"✓":""}</div><div class="tl">${esc(t.t)}${t.crit?' <span class="badge">key task</span>':""}</div></div>`;
+    });
+    if(b.tasks.some(t=>t.timer)&&!TMR.on)
+      h+=`<div style="padding:4px 8px 8px;"><button class="pill sm gold" onclick="timerStart()">⏱ Start 50/10 focus timer</button></div>`;
+    if(b.workout) h+=workoutCard();
+    if(b.bible) h+=verseCardAM();
+    h+=`</div></div>`;
+  });
+  // extras (filled chores)
+  if(L.extra.length){
+    h+=`<div class="sec-title">✨ Extra wins today</div><div class="card">`;
+    L.extra.forEach((x,i)=>{
+      h+=`<div class="task ${x.done?"done":""}" onclick="toggleExtra(${i})"><div class="cb">${x.done?"✓":""}</div><div class="tl">${esc(x.t)}</div></div>`;
+    });
+    h+=`</div>`;
+  }
+  // evening couple card
+  h+=coupleCard();
+  // sunday preview shows Mon; weekday evening: alarms hint only on first run — keep in settings
+  return h;
+}
+function checkinNudge(){
+  const d=dow(); if(d===0||d===6) return "";
+  const now=nowMin(); const L=dayLog();
+  for(const ct of S.settings.checkins){
+    const m=tMin(ct);
+    if(now>=m && now<m+45){
+      const recent=Object.keys(L.c).filter(k=>L.c[k]).length + L.extra.filter(x=>x.done).length;
+      const due=dueChores(d===4||d===5);
+      if(due.length)
+        return `<div class="card nudge spread"><div><b>👋 ${fmtT(ct)} check-in</b><br>
+        <span class="muted">Got a gap? "${esc(due[0].n)}" would feel great to cross off.</span></div>
+        <button class="pill gold sm" onclick="openFill()">Show me</button></div>`;
+    }
+  }
+  return "";
+}
+function workoutCard(){
+  const w=WORKOUTS[doy()%WORKOUTS.length];
+  const url="https://www.youtube.com/results?search_query="+encodeURIComponent(w.q);
+  return `<div class="card soft" style="margin:4px 8px 10px;box-shadow:none;">
+    <b>💪 Today: ${esc(w.n)}</b><br><span class="muted" style="line-height:1.5;">${esc(w.moves)}</span><br>
+    <a href="${url}" target="_blank" class="pill sm gold" style="margin-top:8px;text-decoration:none;display:inline-block;">▶ Find a video for this</a></div>`;
+}
+function verseCardAM(){
+  const v=VERSES_AM[doy()%VERSES_AM.length];
+  return `<div class="card soft" style="margin:4px 8px 10px;box-shadow:none;">
+    <div class="verse">“${v[0]}”</div><div class="vref">— ${v[1]}</div></div>`;
+}
+function coupleCard(){
+  const v=VERSES_MARRIAGE[doy()%VERSES_MARRIAGE.length];
+  const done=S.wins.find(w=>w.d===todayKey()&&w.type==="couple");
+  return `<div class="sec-title">💛 You & ${esc(S.settings.partner)}</div>
+  <div class="card blush">
+    <div class="verse">“${v[0]}”</div><div class="vref">— ${v[1]}</div>
+    ${done?`<p style="margin:10px 0 0;"><b>Tonight's win:</b> ${esc(done.t)} 💛</p>`
+    :`<button class="pill blushp" style="margin-top:12px;" onclick="promptWin('couple')">💛 One win for us today</button>`}
+  </div>`;
+}
+/* ---------- WEEKEND ---------- */
+function vWeekend(L){
+  let h="";
+  const d=dow();
+  if(!L.sched||!L.sched.length){
+    h+=`<div class="card soft center" style="padding:30px 20px;">
+      <div style="font-size:44px;">🌞</div>
+      <h2 class="serif" style="margin:8px 0 4px;color:var(--gold-dk);">It's ${DAYN[d]} — no work today!</h2>
+      <p class="muted">Tap the button when you're up and I'll build your day from that exact moment — catch-up tasks, one deep task, and rest.</p>
+      <button class="pill gold" style="font-size:18px;padding:14px 34px;" onclick="imUp()">☀️ I'm up!</button></div>`;
+  }else{
+    h+=`<div class="sec-title">☀️ Your ${DAYN[d]} plan</div>`;
+    L.sched.forEach((x,i)=>{
+      h+=`<div class="card spread ${x.done?"":""}" style="padding:12px 16px;">
+        <div class="task ${x.done?"done":""}" style="padding:0;flex:1;" onclick="toggleSched(${i})">
+          <div class="cb">${x.done?"✓":""}</div>
+          <div class="tl"><b>${x.time}</b> · ${esc(x.t)}</div></div></div>`;
+    });
+    h+=`<div class="row" style="margin:4px 2px 14px;">
+      <button class="pill ghost sm" onclick="if(confirm('Rebuild the plan from right now?')){dayLog().sched=[];save();imUp();}">🔄 Replan from now</button>
+      <button class="pill ghost sm" onclick="markDeepDone()">✓ Deep task done</button></div>`;
+  }
+  if(d===0) h+=sundayPreview();
+  h+=coupleCard();
+  return h;
+}
+function markDeepDone(){
+  S.deepLastWeek=isoWeek(new Date()); S.deepIdx++; save(); confetti(40); toast("Deep task conquered! 🌟"); render();
+}
+function sundayPreview(){
+  const mon=S.routines[1]||[];
+  const first=mon.slice(0,3).map(b=>`<span class="muted">• ${fmtT(b.s)} — ${esc(b.n)}</span>`).join("<br>");
+  return `<div class="card soft"><b>🌙 Sunday evening peek at Monday</b><br>
+  <div style="margin-top:6px;">${first}</div>
+  <p class="muted" style="margin:8px 0 0;">Clothes laid out? List reviewed? Then tomorrow's 5am has nothing on you. 💪</p></div>`;
+}
+/* ---------- CHORES ---------- */
+function vChores(){
+  let h=header();
+  h+=`<div class="tabbtns"><button class="pill gold" onclick="openFill()">✨ Fill my time</button>
+  <button class="pill ghost" onclick="editChore(null)">+ Add chore</button></div>`;
+  h+=`<div class="sec-title">🌟 This weekend's deep task</div>
+  <div class="card soft spread"><div><b>${esc(DEEP_CLEAN[S.deepIdx%DEEP_CLEAN.length])}</b><br>
+  <span class="muted">${S.deepLastWeek===isoWeek(new Date())?"Done this week — next one queued! ✓":"One per weekend keeps panic-cleaning away"}</span></div>
+  ${S.deepLastWeek===isoWeek(new Date())?"":`<button class="pill sm gold" onclick="markDeepDone()">Done ✓</button>`}</div>`;
+  h+=`<div class="sec-title">🫧 Chore bank</div><div class="card">`;
+  S.chores.forEach(c=>{
+    const od=choreDue(c);
+    const chip=od>0?`<span class="duechip due-over">${od}d overdue</span>`
+      :od===0?`<span class="duechip due-today">due today</span>`
+      :`<span class="duechip due-ok">${c.type==="day"?DAYS[c.day]+"s":"every "+c.every+"d"}</span>`;
+    h+=`<div class="listitem">
+      <button class="pill sm ${od>=0?"gold":"ghost"}" onclick="doneChore('${c.id}');confetti(16);cheer();render();">✓</button>
+      <div class="grow"><b>${esc(c.n)}</b><br><span class="muted">${c.eff} min${c.intr?" · pausable":""}${c.last?" · last: "+c.last.slice(5):""}</span></div>
+      ${chip}<button class="xbtn" onclick="editChore('${c.id}')">✎</button></div>`;
+  });
+  h+=`</div><p class="muted center" style="padding:0 20px;">Tap ✓ when you do one — "Fill my time" always suggests whatever's most overdue.</p>`;
+  return h;
+}
+function editChore(id){
+  const c=id?S.chores.find(x=>x.id===id):null;
+  openModal(`<h2>${c?"Edit chore":"New chore"}</h2>
+  <input type="text" id="ch-n" placeholder="Chore name" value="${c?esc(c.n):""}">
+  <div class="row"><div style="flex:1;"><label class="muted">Minutes</label>
+  <select id="ch-eff"><option value="5"${c&&c.eff===5?" selected":""}>5</option><option value="15"${!c||c.eff===15?" selected":""}>15</option><option value="30"${c&&c.eff===30?" selected":""}>30</option></select></div>
+  <div style="flex:1;"><label class="muted">Repeats</label>
+  <select id="ch-type"><option value="freq"${!c||c.type==="freq"?" selected":""}>Every X days</option><option value="day"${c&&c.type==="day"?" selected":""}>Fixed weekday</option></select></div></div>
+  <div class="row"><div style="flex:1;"><label class="muted">X days (if every X)</label>
+  <input type="number" id="ch-every" value="${c&&c.every?c.every:7}" min="1"></div>
+  <div style="flex:1;"><label class="muted">Weekday (if fixed)</label>
+  <select id="ch-day">${DAYN.map((d,i)=>`<option value="${i}"${c&&c.day===i?" selected":""}>${d}</option>`).join("")}</select></div></div>
+  <label style="display:flex;gap:8px;align-items:center;margin:8px 0;"><input type="checkbox" id="ch-intr" style="width:22px;height:22px;"${!c||c.intr?" checked":""}> Easy to pause (ok during work gaps)</label>
+  <div class="row" style="margin-top:6px;">
+    <button class="pill gold" onclick="saveChore('${id||""}')">Save</button>
+    ${c?`<button class="pill ghost" onclick="if(confirm('Delete this chore?')){S.chores=S.chores.filter(x=>x.id!=='${id}');save();closeModal();render();}">Delete</button>`:""}
+    <button class="pill ghost" onclick="closeModal()">Cancel</button></div>`);
+}
+function saveChore(id){
+  const n=$("#ch-n").value.trim(); if(!n){toast("Give it a name 💛");return;}
+  const o={n,eff:+$("#ch-eff").value,type:$("#ch-type").value,every:+$("#ch-every").value,
+    day:+$("#ch-day").value,intr:$("#ch-intr").checked};
+  if(id){ Object.assign(S.chores.find(x=>x.id===id),o); }
+  else{ S.chores.push({id:"c"+Date.now(),last:null,...o}); }
+  save(); closeModal(); render();
+}
+/* ---------- LISTS ---------- */
+function vLists(){
+  let h=header();
+  const g=S.groceries;
+  h+=`<div class="sec-title">🛒 Grocery list <span class="badge gold">shop ${DAYN[S.settings.shopDay]}</span></div>
+  <div class="card">
+    <div class="row"><input type="text" id="g-new" placeholder="Add item…" style="flex:1;margin:0;" onkeydown="if(event.key==='Enter')addG()">
+    <button class="pill gold sm" onclick="addG()">Add</button></div>
+    <div style="margin-top:8px;">`;
+  if(!g.length) h+=`<p class="muted center">List is empty — add as you think of things during the week.</p>`;
+  g.forEach((it,i)=>{
+    h+=`<div class="listitem"><div class="task ${it.ck?"done":""}" style="padding:0;flex:1;" onclick="S.groceries[${i}].ck=!S.groceries[${i}].ck;save();render();">
+    <div class="cb">${it.ck?"✓":""}</div><div class="tl">${esc(it.n)}</div></div>
+    <button class="xbtn" onclick="S.groceries.splice(${i},1);save();render();">✕</button></div>`;
+  });
+  h+=`</div>${g.some(x=>x.ck)?`<button class="pill ghost sm" style="margin-top:8px;" onclick="S.groceries=S.groceries.filter(x=>!x.ck);save();toast('Cart cleared — great shop! 🛒');render();">Clear checked (done shopping)</button>`:""}</div>`;
+  h+=`<div class="sec-title">🍽 This week's dinners</div><div class="card">
+  <p class="muted" style="margin:0 0 6px;">Kill the "what's for dinner" question once a week. Tap 🛒 to add its ingredients to the list.</p>`;
+  for(let i=0;i<7;i++){
+    h+=`<div class="listitem"><b style="width:44px;color:var(--gold-dk);">${DAYS[(i+1)%7]}</b>
+    <input type="text" style="flex:1;margin:0;padding:8px;" value="${esc(S.dinners[i]||"")}" placeholder="—"
+      onchange="S.dinners[${i}]=this.value;save();">
+    <button class="xbtn" title="Add ingredients" onclick="addIngredients(${i})">🛒</button></div>`;
+  }
+  h+=`</div>`;
+  return h;
+}
+function addG(){ const v=$("#g-new").value.trim(); if(v){S.groceries.push({n:v,ck:false});save();render();
+  setTimeout(()=>{const e=$("#g-new"); if(e){e.focus();}},50);} }
+function addIngredients(i){
+  const meal=S.dinners[i]||"dinner";
+  const v=prompt("Ingredients for "+meal+" (comma separated):");
+  if(v){ v.split(",").map(x=>x.trim()).filter(Boolean).forEach(n=>S.groceries.push({n,ck:false}));
+    save(); toast("Added to grocery list 🛒"); render(); }
+}
+/* ---------- WINS / REVIEW ---------- */
+function vWins(){
+  let h=header();
+  // weekly review numbers (last 7 days)
+  let tasks=0, chores=0;
+  const d=new Date();
+  for(let i=0;i<7;i++){
+    const k=todayKey(d); const L=S.log[k];
+    if(L){ tasks+=Object.values(L.c||{}).filter(Boolean).length
+      +(L.extra||[]).filter(x=>x.done).length+(L.sched||[]).filter(x=>x.done).length; }
+    d.setDate(d.getDate()-1);
+  }
+  const wWins=S.wins.filter(w=>w.type==="work"), cWins=S.wins.filter(w=>w.type==="couple");
+  const carry=carriedForward();
+  h+=`<div class="card soft center">
+    <h2 class="serif" style="margin:0;color:var(--gold-dk);">Your week in gold ✨</h2>
+    <div class="row" style="justify-content:center;margin-top:10px;gap:20px;">
+      <div><div class="big" style="font-size:30px;color:var(--gold-dk);">${tasks}</div><div class="muted">things done<br>this week</div></div>
+      <div><div class="big" style="font-size:30px;color:var(--gold-dk);">${streak()}</div><div class="muted">day<br>streak 🔥</div></div>
+      <div><div class="big" style="font-size:30px;color:var(--blush-dk);">${cWins.length}</div><div class="muted">couple<br>wins 💛</div></div>
+    </div>
+    <p class="muted" style="margin-bottom:0;">${tasks>0?"Look at all of that. Seriously — look at it.":"This week is just getting started. 💛"}</p></div>`;
+  if(carry.length){
+    h+=`<div class="card"><b>↪ Carried forward (not failures — just later)</b>
+    ${carry.map(t=>`<div class="winline">${esc(t)}</div>`).join("")}
+    <p class="muted" style="margin-bottom:0;">These roll into your weekend plan automatically.</p></div>`;
+  }
+  h+=`<div class="row" style="margin:6px 0 10px;">
+    <button class="pill gold sm" onclick="promptWin('work')">+ Work win</button>
+    <button class="pill blushp sm" onclick="promptWin('couple')">+ Couple win</button></div>`;
+  h+=`<div class="sec-title">🏆 Work wins</div><div class="card">`;
+  h+=wWins.length?wWins.slice(0,30).map(w=>`<div class="winline"><span class="wd">${w.d}</span><br>${esc(w.t)}</div>`).join("")
+    :`<p class="muted center">Your first win goes here at today's 4:30 wind-down.</p>`;
+  h+=`</div><div class="sec-title">💛 You & ${esc(S.settings.partner)}</div><div class="card blush">`;
+  h+=cWins.length?cWins.slice(0,30).map(w=>`<div class="winline"><span class="wd">${w.d}</span><br>${esc(w.t)} <span class="heart">♥</span></div>`).join("")
+    :`<p class="muted center">Every evening, one little win for the two of you. It becomes a beautiful story.</p>`;
+  h+=`</div>`;
+  return h;
+}
+/* ---------- EDIT / SETTINGS ---------- */
+let editDay=1;
+function vEdit(){
+  let h=header();
+  h+=`<div class="sec-title">📝 Edit my routines</div>
+  <div class="card"><div>${[1,2,3,4,5].map(d=>`<span class="chip ${editDay===d?"on":""}" onclick="editDay=${d};render()">${DAYS[d]}</span>`).join("")}</div>
+  <div style="margin-top:10px;">`;
+  (S.routines[editDay]||[]).forEach((b,bi)=>{
+    h+=`<div style="border:1.5px solid var(--butter2);border-radius:14px;padding:10px;margin-bottom:10px;">
+      <div class="spread"><b>${esc(b.n)}</b><span class="muted">${fmtT(b.s)}–${fmtT(b.e)}</span></div>
+      ${b.tasks.map((t,ti)=>`<div class="listitem"><div class="grow" style="font-size:14px;">${esc(t.t)}</div>
+        <button class="xbtn" onclick="editTask(${bi},${ti})">✎</button>
+        <button class="xbtn" onclick="if(confirm('Remove this task?')){S.routines[editDay][${bi}].tasks.splice(${ti},1);save();render();}">✕</button></div>`).join("")}
+      <div class="row" style="margin-top:6px;">
+        <button class="pill sm ghost" onclick="addTask(${bi})">+ task</button>
+        <button class="pill sm ghost" onclick="editBlockTimes(${bi})">🕐 times</button>
+        <button class="pill sm ghost" onclick="if(confirm('Delete whole block?')){S.routines[editDay].splice(${bi},1);save();render();}">delete</button>
+      </div></div>`;
+  });
+  h+=`<button class="pill ghost" onclick="addBlock()">+ Add a block to ${DAYN[editDay]}</button></div></div>`;
+  h+=`<div class="sec-title">⚙️ Settings</div><div class="card">
+    <label class="muted">Your name</label><input type="text" value="${esc(S.settings.name)}" onchange="S.settings.name=this.value;save();">
+    <label class="muted">Partner's name</label><input type="text" value="${esc(S.settings.partner)}" onchange="S.settings.partner=this.value;save();">
+    <label class="muted">App name</label><input type="text" value="${esc(S.settings.appName)}" onchange="S.settings.appName=this.value;save();render();">
+    <label class="muted">Check-in nudge times</label>
+    <div class="row"><input type="time" style="flex:1;" value="${S.settings.checkins[0]}" onchange="S.settings.checkins[0]=this.value;save();">
+    <input type="time" style="flex:1;" value="${S.settings.checkins[1]}" onchange="S.settings.checkins[1]=this.value;save();"></div>
+    <label class="muted">Grocery shop day</label>
+    <select onchange="S.settings.shopDay=+this.value;save();render();">${DAYN.map((d,i)=>`<option value="${i}"${S.settings.shopDay===i?" selected":""}>${d}</option>`).join("")}</select>
+  </div>`;
+  h+=`<div class="card soft"><b>⏰ Set these iPhone alarms once</b>
+    <p class="muted" style="margin:6px 0 0;line-height:1.6;">The app can't ring when it's closed, so let your phone handle the wake-ups:<br>
+    • <b>5:00 AM</b> weekdays — rise & shine<br>
+    • <b>7:00 AM</b> Wednesdays — tutoring link email 📚<br>
+    • Optional: <b>12:30 & 3:30 PM</b> — check-in nudges</p></div>`;
+  h+=`<div class="card">
+    <b>💾 Backup</b>
+    <p class="muted" style="margin:4px 0 8px;">Your data lives only on this phone. Export a backup now and then.</p>
+    <div class="row">
+      <button class="pill gold sm" onclick="exportData()">Export backup</button>
+      <label class="pill ghost sm" style="cursor:pointer;">Restore<input type="file" accept=".json" style="display:none;" onchange="importData(this)"></label>
+      <button class="pill ghost sm" onclick="if(confirm('Reset EVERYTHING to defaults? Your wins and history will be erased.')){localStorage.removeItem('tcm_v1');location.reload();}">Reset all</button>
+    </div></div>`;
+  h+=`<p class="center muted" style="padding-bottom:10px;">Made with 💛 for ${esc(S.settings.name)} — The ${esc(S.settings.name)} Method, v1</p>`;
+  return h;
+}
+function editTask(bi,ti){
+  const t=S.routines[editDay][bi].tasks[ti];
+  const v=prompt("Edit task:",t.t); if(v!==null&&v.trim()){t.t=v.trim();save();render();}
+}
+function addTask(bi){
+  const v=prompt("New task:"); if(v&&v.trim()){
+    S.routines[editDay][bi].tasks.push({id:"t"+Date.now(),t:v.trim()}); save(); render(); }
+}
+function editBlockTimes(bi){
+  const b=S.routines[editDay][bi];
+  const s=prompt("Start time (24h HH:MM):",b.s); if(s===null)return;
+  const e=prompt("End time (24h HH:MM):",b.e); if(e===null)return;
+  if(/^\d{1,2}:\d{2}$/.test(s)&&/^\d{1,2}:\d{2}$/.test(e)){b.s=s.padStart(5,"0");b.e=e.padStart(5,"0");save();render();}
+  else toast("Use HH:MM like 07:30");
+}
+function addBlock(){
+  const n=prompt("Block name (e.g. Errands):"); if(!n)return;
+  const s=prompt("Start (24h HH:MM):","09:00")||"09:00";
+  const e=prompt("End (24h HH:MM):","10:00")||"10:00";
+  S.routines[editDay].push({n,s:s.padStart(5,"0"),e:e.padStart(5,"0"),tasks:[]});
+  S.routines[editDay].sort((a,b)=>tMin(a.s)-tMin(b.s));
+  save(); render();
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="chelsea-method-backup-"+todayKey()+".json";
+  a.click(); toast("Backup saved 💾");
+}
+function importData(inp){
+  const f=inp.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const d=JSON.parse(r.result);
+      if(d&&d.settings&&d.routines){ S=d; save(); toast("Restored! Welcome back 💛"); render(); }
+      else toast("That doesn't look like a backup file.");
+    }catch(e){ toast("Couldn't read that file."); } };
+  r.readAsText(f);
+}
+/* ---------- boot ---------- */
+load();
+render();
+setInterval(()=>{ if(VIEW==="today"&&!$("#overlay").classList.contains("show")&&document.activeElement.tagName!=="INPUT"&&document.activeElement.tagName!=="TEXTAREA") render(); },60000);
+</script>
+</body>
+</html>
