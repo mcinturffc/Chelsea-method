@@ -243,17 +243,33 @@ const DEEP_CLEAN = ["Baseboards & door frames","Oven & stovetop deep clean","Win
   "Closet purge (one closet)","Under furniture vacuum","Shower & grout deep scrub",
   "Pantry organize & wipe","Fridge coils & behind appliances","Ceiling fans & vents","Junk drawer reset"];
 const WORKOUTS = [
-  {n:"Lower Body Sculpt",moves:"3 rounds: 15 squats · 12 reverse lunges/leg · 15 glute bridges · 30s wall sit",q:"20 min no equipment lower body workout women build muscle"},
-  {n:"Upper Body Tone",moves:"3 rounds: 10 push-ups (knees ok) · 12 tricep dips · 30s plank shoulder taps · 12 superman lifts",q:"20 min no equipment upper body toning workout"},
-  {n:"Core Tightener",moves:"3 rounds: 30s plank · 15 dead bugs · 12 bicycle crunches · 15 heel touches",q:"20 minute core workout no equipment women"},
-  {n:"Full-Body Strength",moves:"3 rounds: 12 squats · 10 push-ups · 12 alt lunges · 30s plank · 15 glute bridges",q:"25 min full body no equipment strength workout"},
-  {n:"Booty & Hamstrings",moves:"3 rounds: 15 sumo squats · 12 single-leg glute bridges/leg · 15 donkey kicks/leg · 20 fire hydrants",q:"20 min glutes workout no equipment"},
-  {n:"Arms & Shoulders Burn",moves:"3 rounds: 12 pike push-ups · 15 arm circles fwd/back · 10 push-up to side plank · 30s plank up-downs",q:"20 min arms and shoulders workout no weights"},
-  {n:"Low-Impact Total Tone",moves:"3 rounds: 15 squat pulses · 12 knee push-ups · 15 standing side crunches/side · 30s glute bridge hold",q:"20 min low impact toning workout no equipment"},
-  {n:"HIIT Tighten & Tone",moves:"4 rounds, 40s on/20s off: squat to press-up · mountain climbers · reverse lunges · plank jacks",q:"20 minute HIIT workout no equipment women"},
-  {n:"Core + Glutes Combo",moves:"3 rounds: 15 glute bridges · 30s side plank/side · 15 bird dogs · 20 standing marches",q:"20 min core and glutes workout no equipment"},
-  {n:"Total Body Pilates-style",moves:"3 rounds: 12 roll-ups · 15 leg circles/leg · 30s plank · 12 swimming pulses",q:"25 min pilates full body workout no equipment"}
+  {n:"Lower Body Sculpt",cat:"lower",moves:"3 rounds: 15 squats · 12 reverse lunges/leg · 15 glute bridges · 30s wall sit",q:"20 min no equipment lower body workout women build muscle"},
+  {n:"Upper Body Tone",cat:"upper",moves:"3 rounds: 10 push-ups (knees ok) · 12 tricep dips · 30s plank shoulder taps · 12 superman lifts",q:"20 min no equipment upper body toning workout"},
+  {n:"Core Tightener",cat:"core",moves:"3 rounds: 30s plank · 15 dead bugs · 12 bicycle crunches · 15 heel touches",q:"20 minute core workout no equipment women"},
+  {n:"Full-Body Strength",cat:"full",moves:"3 rounds: 12 squats · 10 push-ups · 12 alt lunges · 30s plank · 15 glute bridges",q:"25 min full body no equipment strength workout"},
+  {n:"Booty & Hamstrings",cat:"glutes",moves:"3 rounds: 15 sumo squats · 12 single-leg glute bridges/leg · 15 donkey kicks/leg · 20 fire hydrants",q:"20 min glutes workout no equipment"},
+  {n:"Arms & Shoulders Burn",cat:"upper",moves:"3 rounds: 12 pike push-ups · 15 arm circles fwd/back · 10 push-up to side plank · 30s plank up-downs",q:"20 min arms and shoulders workout no weights"},
+  {n:"Low-Impact Total Tone",cat:"full",moves:"3 rounds: 15 squat pulses · 12 knee push-ups · 15 standing side crunches/side · 30s glute bridge hold",q:"20 min low impact toning workout no equipment"},
+  {n:"HIIT Tighten & Tone",cat:"full",moves:"4 rounds, 40s on/20s off: squat to press-up · mountain climbers · reverse lunges · plank jacks",q:"20 minute HIIT workout no equipment women"},
+  {n:"Core + Glutes Combo",cat:"glutes",moves:"3 rounds: 15 glute bridges · 30s side plank/side · 15 bird dogs · 20 standing marches",q:"20 min core and glutes workout no equipment"},
+  {n:"Total Body Pilates-style",cat:"full",moves:"3 rounds: 12 roll-ups · 15 leg circles/leg · 30s plank · 12 swimming pulses",q:"25 min pilates full body workout no equipment"},
+  {n:"Legs & Booty Builder",cat:"lower",moves:"3 rounds: 12 curtsy lunges/leg · 15 squat pulses · 12 step-ups (stairs) · 30s glute bridge hold",q:"20 min legs and glutes workout no equipment build muscle"},
+  {n:"Deep Core & Posture",cat:"core",moves:"3 rounds: 12 bird dogs · 30s forearm plank · 15 reverse crunches · 12 supermans",q:"20 min deep core posture workout no equipment"}
 ];
+const SPLIT={1:"lower",2:"upper",3:"core",4:"full",5:"glutes"};
+const SPLIT_NAMES={lower:"Lower body day 🍑",upper:"Upper body day 💪",core:"Core day 🔥",full:"Full-body day ⚡",glutes:"Glutes & hamstrings day 🍑"};
+const MILESTONES={3:"3-day streak! The hardest part is behind you. 🌱",7:"ONE FULL WEEK! You're officially consistent. 🌷",
+  14:"Two weeks strong. This is a lifestyle now. 🌼",30:"THIRTY DAYS. Chelsea, you rebuilt your routine. 👑",
+  60:"60 days. You don't even recognize the old chaos. ✨",100:"💯 DAYS. Legendary. Frame this moment."};
+const DATE_IDEAS=["Cook a brand-new recipe together — loser of rock-paper-scissors does dishes",
+  "Backyard or living-room picnic with candles","Board game or card tournament, best of 5, winner picks dessert",
+  "Take turns playing 'songs from when we met' and tell the stories","Couples' bucket list night — write 10 things each, compare",
+  "At-home spa: trade 15-minute massages","Watch the sunset together, phones inside","Bake something neither of you has made",
+  "Question night: 20 questions you've never asked each other","Slow dance in the kitchen to three songs",
+  "Plan your dream vacation in detail like it's booked","Read a chapter of a book out loud together",
+  "Breakfast for dinner, fancy plating required","Look through old photos and pick your top 10 as a couple",
+  "Stargaze with a blanket and hot drinks","Write each other a note to open in one year","Devotional + prayer night together",
+  "Home workout together — he does YOUR workout 😉"];
 const VERSES_AM = [
   ["This is the day that the LORD has made. We will rejoice and be glad in it!","Psalm 118:24"],
   ["I can do all things through Christ, who strengthens me.","Philippians 4:13"],
@@ -310,16 +326,20 @@ const DEFAULT_STATE = {
   chores:DEFAULT_CHORES,
   deepIdx:0, deepLastWeek:null,
   groceries:[], dinners:["","","","","","",""],
-  wins:[], log:{}
+  wins:[], log:{},
+  meals:[], prayers:[], myDates:{anniv:"",bday:"",pbday:""}
 };
 /* ================= CORE ================= */
-let S;
+var S;
 function load(){
   try{ S = JSON.parse(localStorage.getItem("tcm_v1")) || null; }catch(e){ S=null; }
   if(!S){ S = JSON.parse(JSON.stringify(DEFAULT_STATE)); save(); }
   if(!S.dinners) S.dinners=["","","","","","",""];
   if(!S.wins) S.wins=[];
   if(!S.log) S.log={};
+  if(!S.meals) S.meals=[];
+  if(!S.prayers) S.prayers=[];
+  if(!S.myDates) S.myDates={anniv:"",bday:"",pbday:""};
 }
 function save(){ try{ localStorage.setItem("tcm_v1", JSON.stringify(S)); }catch(e){} }
 const $=s=>document.querySelector(s);
@@ -478,7 +498,7 @@ function toggleTask(tid,blockIdx){
       if(b.win==="work") setTimeout(()=>promptWin("work"),600);
     }
     const pct=dayPct(todayKey());
-    if(pct===100 && !L.dDone){ L.dDone=true; save(); setTimeout(()=>{confetti(90); toast("FULL DAY COMPLETE! You are amazing! 🎉👑");},400); }
+    if(pct===100 && !L.dDone){ L.dDone=true; save(); setTimeout(()=>{confetti(90); toast("FULL DAY COMPLETE! You are amazing! 🎉👑"); milestoneCheck();},400); }
   }
   render();
 }
@@ -492,10 +512,66 @@ function toggleSched(i){
   if(x.done && x.choreId) doneChore(x.choreId);
   save(); if(x.done){confetti(20); cheer();}
   const all=L.sched.length&&L.sched.every(s=>s.done);
-  if(all&&!L.dDone){L.dDone=true;save();setTimeout(()=>{confetti(90);toast("Weekend list DONE. Go rest, you earned it! 🎉");},400);}
+  if(all&&!L.dDone){L.dDone=true;save();setTimeout(()=>{confetti(90);toast("Weekend list DONE. Go rest, you earned it! 🎉");milestoneCheck();},400);}
   render();
 }
 
+function milestoneCheck(){
+  const s=streak();
+  if(MILESTONES[s]){
+    setTimeout(()=>{ confetti(120);
+      openModal(`<div class="center" style="padding:20px 6px;">
+      <div style="font-size:56px;">🏆</div>
+      <h2 class="serif" style="color:var(--gold-dk);">${s}-Day Streak!</h2>
+      <p style="font-size:17px;line-height:1.5;">${MILESTONES[s]}</p>
+      <button class="pill gold" onclick="closeModal()">Keep going 💛</button></div>`);
+    },1500);
+  }
+}
+/* ---- special dates ---- */
+function specialToday(){
+  const md=todayKey().slice(5); // MM-DD
+  const D=S.myDates||{};
+  if(D.anniv&&D.anniv.slice(5)===md) return {t:"💍 Happy Anniversary, "+S.settings.name+" & "+S.settings.partner+"!",v:["Now these three remain: faith, hope, and love. But the greatest of these is love.","1 Corinthians 13:13"]};
+  if(D.bday&&D.bday.slice(5)===md) return {t:"🎂 Happy Birthday, "+S.settings.name+"! Today the routine serves YOU.",v:["This is the day that the LORD has made. We will rejoice and be glad in it!","Psalm 118:24"]};
+  if(D.pbday&&D.pbday.slice(5)===md) return {t:"🎂 It's "+S.settings.partner+"'s birthday! Make it golden.",v:null};
+  return null;
+}
+function annivCountdown(){
+  const D=S.myDates||{}; if(!D.anniv) return "";
+  const now=new Date(); const md=D.anniv.slice(5).split("-");
+  let a=new Date(now.getFullYear(),+md[0]-1,+md[1]);
+  if(a<now.setHours(0,0,0,0)) a=new Date(now.getFullYear()+1,+md[0]-1,+md[1]);
+  const days=Math.round((a-new Date(new Date().setHours(0,0,0,0)))/864e5);
+  return (days>0&&days<=14)?`<div class="muted" style="margin-top:8px;">💍 Anniversary in ${days} day${days>1?"s":""}!</div>`:"";
+}
+/* ---- date night ---- */
+function dateNight(){
+  const idea=DATE_IDEAS[Math.floor(Math.random()*DATE_IDEAS.length)];
+  openModal(`<h2>💕 Date night idea</h2>
+  <div class="card blush" style="margin-top:10px;"><p style="font-size:17px;line-height:1.5;margin:4px 0;">${esc(idea)}</p></div>
+  <div class="row"><button class="pill blushp" onclick="dateNight()">Another one</button>
+  <button class="pill ghost" onclick="closeModal()">Perfect, done</button></div>`);
+}
+/* ---- prayers & gratitude ---- */
+function openPrayers(){
+  openModal(`<h2>🙏 Prayer list</h2>
+  <div class="row"><input type="text" id="pr-new" placeholder="Add someone or something…" style="flex:1;margin:0;">
+  <button class="pill gold sm" onclick="const v=document.getElementById('pr-new').value.trim();if(v){S.prayers.unshift({t:v,d:todayKey()});save();openPrayers();}">Add</button></div>
+  <div style="margin-top:8px;">
+  ${S.prayers.length?S.prayers.map((p,i)=>`<div class="listitem"><div class="grow">${esc(p.t)}<br><span class="muted" style="font-size:11px;">${p.d}</span></div>
+    <button class="xbtn" title="Answered/remove" onclick="S.prayers.splice(${i},1);save();openPrayers();">✓</button></div>`).join("")
+  :`<p class="muted center">Who's on your heart this morning?</p>`}
+  </div><button class="pill ghost" style="margin-top:8px;" onclick="closeModal()">Close</button>`);
+}
+function promptGratitude(){
+  openModal(`<h2>✨ One thing you're grateful for</h2>
+  <textarea id="grattext" placeholder="Big or tiny — coffee counts."></textarea>
+  <div class="row"><button class="pill gold" onclick="const v=document.getElementById('grattext').value.trim();if(v){S.wins.unshift({d:todayKey(),type:'grat',t:v});save();confetti(18);toast('Gratitude noted ✨');}closeModal();render();">Save</button>
+  <button class="pill ghost" onclick="closeModal()">Later</button></div>`);
+}
+/* ---- energy check ---- */
+function setEnergy(e){ dayLog().energy=e; save(); toast(e==="⚡"?"Love that energy!":e==="🙂"?"Steady wins. 💛":"Rest well tonight — tomorrow's a new page. 🌙"); render(); }
 /* ---- wins ---- */
 function promptWin(type){
   const isW=type==="work";
@@ -664,6 +740,11 @@ function vToday(){
     <button class="pill gold" onclick="openFill()">✨ Fill my time</button>
     <button class="pill ghost" onclick="rescue()">🛟 Rescue my day</button>
   </div></div>`;
+  // special dates
+  const sp=specialToday();
+  if(sp) h+=`<div class="card blush center fade" style="padding:20px;">
+    <div style="font-size:34px;">🎉</div><b style="font-size:17px;">${esc(sp.t)}</b>
+    ${sp.v?`<div class="verse" style="margin-top:8px;">“${sp.v[0]}”</div><div class="vref">— ${sp.v[1]}</div>`:""}</div>`;
   // check-in nudge
   const nud=checkinNudge();
   if(nud) h+=nud;
@@ -725,26 +806,48 @@ function checkinNudge(){
   }
   return "";
 }
+function pickWorkout(){
+  const cat=SPLIT[dow()]||"full";
+  const pool=WORKOUTS.filter(w=>w.cat===cat);
+  const wk=Math.floor(doy()/7);
+  return {w:pool[wk%pool.length],cat};
+}
 function workoutCard(){
-  const w=WORKOUTS[doy()%WORKOUTS.length];
+  const {w,cat}=pickWorkout();
   const url="https://www.youtube.com/results?search_query="+encodeURIComponent(w.q);
+  const month=todayKey().slice(0,7);
+  const count=Object.keys(S.log).filter(k=>k.startsWith(month)&&S.log[k].c&&S.log[k].c["workout"]).length;
   return `<div class="card soft" style="margin:4px 8px 10px;box-shadow:none;">
-    <b>💪 Today: ${esc(w.n)}</b><br><span class="muted" style="line-height:1.5;">${esc(w.moves)}</span><br>
-    <a href="${url}" target="_blank" class="pill sm gold" style="margin-top:8px;text-decoration:none;display:inline-block;">▶ Find a video for this</a></div>`;
+    <span class="badge gold">${SPLIT_NAMES[cat]||""}</span><br>
+    <b style="display:inline-block;margin-top:4px;">💪 ${esc(w.n)}</b><br><span class="muted" style="line-height:1.5;">${esc(w.moves)}</span><br>
+    <a href="${url}" target="_blank" class="pill sm gold" style="margin-top:8px;text-decoration:none;display:inline-block;">▶ Find a video for this</a>
+    ${count?`<div class="muted" style="margin-top:8px;">🏋️‍♀️ ${count} workout${count>1?"s":""} done this month</div>`:""}</div>`;
 }
 function verseCardAM(){
   const v=VERSES_AM[doy()%VERSES_AM.length];
+  const grat=S.wins.find(w=>w.d===todayKey()&&w.type==="grat");
   return `<div class="card soft" style="margin:4px 8px 10px;box-shadow:none;">
-    <div class="verse">“${v[0]}”</div><div class="vref">— ${v[1]}</div></div>`;
+    <div class="verse">“${v[0]}”</div><div class="vref">— ${v[1]}</div>
+    <div class="row" style="margin-top:10px;">
+      <button class="pill sm ghost" onclick="openPrayers()">🙏 Prayer list${S.prayers.length?" ("+S.prayers.length+")":""}</button>
+      ${grat?`<span class="badge gold">grateful: ${esc(grat.t.slice(0,24))}${grat.t.length>24?"…":""} ✓</span>`
+      :`<button class="pill sm ghost" onclick="promptGratitude()">✨ Gratitude</button>`}
+    </div></div>`;
 }
 function coupleCard(){
   const v=VERSES_MARRIAGE[doy()%VERSES_MARRIAGE.length];
   const done=S.wins.find(w=>w.d===todayKey()&&w.type==="couple");
+  const en=dayLog().energy;
   return `<div class="sec-title">💛 You & ${esc(S.settings.partner)}</div>
   <div class="card blush">
     <div class="verse">“${v[0]}”</div><div class="vref">— ${v[1]}</div>
     ${done?`<p style="margin:10px 0 0;"><b>Tonight's win:</b> ${esc(done.t)} 💛</p>`
     :`<button class="pill blushp" style="margin-top:12px;" onclick="promptWin('couple')">💛 One win for us today</button>`}
+    <button class="pill sm ghost" style="margin-top:10px;" onclick="dateNight()">💕 Date night idea</button>
+    ${annivCountdown()}
+    <div style="margin-top:12px;"><span class="muted">Tonight's energy:</span>
+      ${["😴","🙂","⚡"].map(e=>`<button class="pill sm ${en===e?"blushp":"ghost"}" style="margin-left:6px;" onclick="setEnergy('${e}')">${e}</button>`).join("")}
+    </div>
   </div>`;
 }
 /* ---------- WEEKEND ---------- */
@@ -854,10 +957,38 @@ function vLists(){
     h+=`<div class="listitem"><b style="width:44px;color:var(--gold-dk);">${DAYS[(i+1)%7]}</b>
     <input type="text" style="flex:1;margin:0;padding:8px;" value="${esc(S.dinners[i]||"")}" placeholder="—"
       onchange="S.dinners[${i}]=this.value;save();">
-    <button class="xbtn" title="Add ingredients" onclick="addIngredients(${i})">🛒</button></div>`;
+    <button class="xbtn" title="Add ingredients" onclick="addIngredients(${i})">🛒</button>
+    <button class="xbtn" title="Save as favorite" onclick="saveMeal(${i})">⭐</button></div>`;
   }
   h+=`</div>`;
+  h+=`<div class="sec-title">⭐ Favorite meals</div><div class="card">`;
+  if(!S.meals.length) h+=`<p class="muted center">Tap ⭐ next to a dinner to save it here with its ingredients — then next week is tap-tap-done.</p>`;
+  S.meals.forEach((m,i)=>{
+    h+=`<div class="listitem"><div class="grow"><b>${esc(m.n)}</b><br><span class="muted">${esc((m.ing||[]).join(", ")||"no ingredients saved")}</span></div>
+    <button class="pill sm gold" onclick="useMeal(${i})">Use</button>
+    <button class="xbtn" onclick="if(confirm('Remove this favorite?')){S.meals.splice(${i},1);save();render();}">✕</button></div>`;
+  });
+  h+=`</div>`;
   return h;
+}
+function saveMeal(i){
+  const n=(S.dinners[i]||"").trim(); if(!n){toast("Type the dinner in first 💛");return;}
+  if(S.meals.find(m=>m.n.toLowerCase()===n.toLowerCase())){toast("Already in favorites ⭐");return;}
+  const v=prompt("Ingredients for "+n+" (comma separated) — saved for one-tap reuse:");
+  S.meals.push({n,ing:v?v.split(",").map(x=>x.trim()).filter(Boolean):[]});
+  save(); confetti(14); toast("Saved to favorites ⭐"); render();
+}
+function useMeal(mi){
+  const m=S.meals[mi];
+  openModal(`<h2>🍽 ${esc(m.n)} — which night?</h2>
+  <div style="margin-top:8px;">${[0,1,2,3,4,5,6].map(i=>`<span class="chip" onclick="useMealDay(${mi},${i})">${DAYN[(i+1)%7]}</span>`).join("")}</div>
+  <button class="pill ghost" style="margin-top:10px;" onclick="closeModal()">Cancel</button>`);
+}
+function useMealDay(mi,i){
+  const m=S.meals[mi];
+  S.dinners[i]=m.n;
+  (m.ing||[]).forEach(n=>{ if(!S.groceries.find(g=>g.n.toLowerCase()===n.toLowerCase()&&!g.ck)) S.groceries.push({n,ck:false}); });
+  save(); closeModal(); toast("Planned + ingredients added 🛒"); render();
 }
 function addG(){ const v=$("#g-new").value.trim(); if(v){S.groceries.push({n:v,ck:false});save();render();
   setTimeout(()=>{const e=$("#g-new"); if(e){e.focus();}},50);} }
@@ -889,6 +1020,23 @@ function vWins(){
       <div><div class="big" style="font-size:30px;color:var(--blush-dk);">${cWins.length}</div><div class="muted">couple<br>wins 💛</div></div>
     </div>
     <p class="muted" style="margin-bottom:0;">${tasks>0?"Look at all of that. Seriously — look at it.":"This week is just getting started. 💛"}</p></div>`;
+  // streak garden (last 30 days)
+  let garden=""; const gd=new Date(); gd.setDate(gd.getDate()-29);
+  for(let i=0;i<30;i++){
+    const k=todayKey(gd), p=S.log[k]?dayPct(k):0;
+    garden+=`<span style="font-size:17px;" title="${k}">${p>=100?"🌻":p>=70?"🌸":p>0?"🌱":"·"}</span>`;
+    gd.setDate(gd.getDate()+1);
+  }
+  h+=`<div class="card soft"><b>🌷 Your streak garden</b> <span class="muted">(last 30 days)</span>
+    <div style="letter-spacing:3px;margin-top:6px;line-height:1.7;">${garden}</div>
+    <span class="muted">🌻 perfect day · 🌸 complete · 🌱 progress</span></div>`;
+  // energy week
+  const ed=new Date(); ed.setDate(ed.getDate()-6); let erow="";
+  for(let i=0;i<7;i++){ const k=todayKey(ed);
+    erow+=`<div style="text-align:center;flex:1;"><div class="muted" style="font-size:11px;">${DAYS[ed.getDay()]}</div><div style="font-size:19px;">${(S.log[k]&&S.log[k].energy)||"·"}</div></div>`;
+    ed.setDate(ed.getDate()+1); }
+  h+=`<div class="card"><b>🔋 Energy this week</b><div class="row" style="margin-top:6px;">${erow}</div>
+    <span class="muted">Spot a pattern? That's where we soften the routine.</span></div>`;
   if(carry.length){
     h+=`<div class="card"><b>↪ Carried forward (not failures — just later)</b>
     ${carry.map(t=>`<div class="winline">${esc(t)}</div>`).join("")}
@@ -904,6 +1052,12 @@ function vWins(){
   h+=cWins.length?cWins.slice(0,30).map(w=>`<div class="winline"><span class="wd">${w.d}</span><br>${esc(w.t)} <span class="heart">♥</span></div>`).join("")
     :`<p class="muted center">Every evening, one little win for the two of you. It becomes a beautiful story.</p>`;
   h+=`</div>`;
+  const grats=S.wins.filter(w=>w.type==="grat");
+  if(grats.length){
+    h+=`<div class="sec-title">✨ Gratitude</div><div class="card">`;
+    h+=grats.slice(0,30).map(w=>`<div class="winline"><span class="wd">${w.d}</span><br>${esc(w.t)}</div>`).join("");
+    h+=`</div>`;
+  }
   return h;
 }
 /* ---------- EDIT / SETTINGS ---------- */
@@ -935,6 +1089,9 @@ function vEdit(){
     <input type="time" style="flex:1;" value="${S.settings.checkins[1]}" onchange="S.settings.checkins[1]=this.value;save();"></div>
     <label class="muted">Grocery shop day</label>
     <select onchange="S.settings.shopDay=+this.value;save();render();">${DAYN.map((d,i)=>`<option value="${i}"${S.settings.shopDay===i?" selected":""}>${d}</option>`).join("")}</select>
+    <label class="muted">💍 Anniversary</label><input type="date" value="${S.myDates.anniv||""}" onchange="S.myDates.anniv=this.value;save();">
+    <label class="muted">🎂 Your birthday</label><input type="date" value="${S.myDates.bday||""}" onchange="S.myDates.bday=this.value;save();">
+    <label class="muted">🎂 ${esc(S.settings.partner)}'s birthday</label><input type="date" value="${S.myDates.pbday||""}" onchange="S.myDates.pbday=this.value;save();">
   </div>`;
   h+=`<div class="card soft"><b>⏰ Set these iPhone alarms once</b>
     <p class="muted" style="margin:6px 0 0;line-height:1.6;">The app can't ring when it's closed, so let your phone handle the wake-ups:<br>
@@ -949,7 +1106,7 @@ function vEdit(){
       <label class="pill ghost sm" style="cursor:pointer;">Restore<input type="file" accept=".json" style="display:none;" onchange="importData(this)"></label>
       <button class="pill ghost sm" onclick="if(confirm('Reset EVERYTHING to defaults? Your wins and history will be erased.')){localStorage.removeItem('tcm_v1');location.reload();}">Reset all</button>
     </div></div>`;
-  h+=`<p class="center muted" style="padding-bottom:10px;">Made with 💛 for ${esc(S.settings.name)} — The ${esc(S.settings.name)} Method, v1</p>`;
+  h+=`<p class="center muted" style="padding-bottom:10px;">Made with 💛 for ${esc(S.settings.name)} — The ${esc(S.settings.name)} Method, v2</p>`;
   return h;
 }
 function editTask(bi,ti){
