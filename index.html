@@ -928,7 +928,7 @@ function vToday(){
   if(earlierIdx.length){
     let eT=0,eD=0;
     earlierIdx.forEach(bi=>blocks[bi].tasks.forEach(t=>{eT++;if(L.c[t.id])eD++;}));
-    h+=`<details class="sect"><summary><span class="sec-title">✔ Earlier today · ${eD}/${eT} done</span></summary>`;
+    h+=`<details class="sect" ${sAttr("earlier")}><summary><span class="sec-title">✔ Earlier today · ${eD}/${eT} done</span></summary>`;
     earlierIdx.forEach(bi=>{ h+=isExpanded(bi,curI)?blockCard(blocks[bi],bi,L,false):miniRow(blocks[bi],bi,L,""); });
     h+=`</details>`;
   }
@@ -946,6 +946,9 @@ function vToday(){
   return h;
 }
 let BLK_OVR={};
+let OPEN_S={};
+function sOpen(id,def){ return (OPEN_S[id]!==undefined?OPEN_S[id]:!!def)?"open":""; }
+function sAttr(id,def){ return `${sOpen(id,def)} ontoggle="OPEN_S['${id}']=this.open"`; }
 function isExpanded(bi,curI){ return BLK_OVR[bi]!==undefined?BLK_OVR[bi]:false; }
 function toggleBlk(bi){ BLK_OVR[bi]=!BLK_OVR[bi]; render(); }
 function blockCard(b,bi,L,isCur){
@@ -1115,9 +1118,9 @@ function vChores(){
   h+=shown.length?shown.map(rowFor).join(""):`<p class="muted center">Nothing due — the house is caught up! 🎉</p>`;
   if(dueNow.length>5) h+=`<div class="center" style="padding:6px 0 2px;">
     <button class="pill ghost sm" onclick="choreShowAll=${!choreShowAll};render()">${choreShowAll?"Show less ☝":"Show "+(dueNow.length-5)+" more 👇"}</button></div>`;
-  h+=`</div><details class="sect"><summary><span class="sec-title">🫧 Daily & weekly</span><span class="cnt">${weekly.length}</span></summary><div class="card">`;
+  h+=`</div><details class="sect" ${sAttr("c-week")}><summary><span class="sec-title">🫧 Daily & weekly</span><span class="cnt">${weekly.length}</span></summary><div class="card">`;
   h+=weekly.length?weekly.map(rowFor).join(""):`<p class="muted center">All caught up here! ✨</p>`;
-  h+=`</div></details><details class="sect"><summary><span class="sec-title">🏠 Monthly house-keepers</span><span class="cnt">${monthly.length}</span></summary><div class="card">`;
+  h+=`</div></details><details class="sect" ${sAttr("c-mon")}><summary><span class="sec-title">🏠 Monthly house-keepers</span><span class="cnt">${monthly.length}</span></summary><div class="card">`;
   h+=monthly.length?monthly.map(rowFor).join(""):`<p class="muted center">You're all caught up for the month! ✨</p>`;
   h+=`</div></details><p class="muted center" style="padding:0 20px;">Tap a chore's name to edit it · 💤 snoozes it guilt-free.</p>`;
   return h;
@@ -1186,7 +1189,7 @@ function vLists(){
     });
   });
   if(ckd.length){
-    h+=`<details class="sect" style="margin-top:10px;"><summary><span class="sec-title" style="font-size:19px;">🛒 In cart</span><span class="cnt">${ckd.length}</span></summary>`;
+    h+=`<details class="sect" style="margin-top:10px;" ${sAttr("g-cart")}><summary><span class="sec-title" style="font-size:19px;">🛒 In cart</span><span class="cnt">${ckd.length}</span></summary>`;
     ckd.forEach(({it,i})=>{
       h+=`<div class="listitem"><div class="task done" style="padding:0;flex:1;" onclick="S.groceries[${i}].ck=false;save();render();">
       <div class="cb">✓</div><div class="tl">${esc(it.n)}</div></div></div>`;
@@ -1272,26 +1275,26 @@ function vWins(){
   for(let i=0;i<7;i++){ const k=todayKey(ed);
     erow+=`<div style="text-align:center;flex:1;"><div class="muted" style="font-size:11px;">${DAYS[ed.getDay()]}</div><div style="font-size:19px;">${(S.log[k]&&S.log[k].energy)||"·"}</div></div>`;
     ed.setDate(ed.getDate()+1); }
-  h+=`<details class="sect"><summary><span class="sec-title">🔋 Energy this week</span></summary>
+  h+=`<details class="sect" ${sAttr("w-en")}><summary><span class="sec-title">🔋 Energy this week</span></summary>
     <div class="card"><div class="row" style="margin-top:2px;">${erow}</div>
     <span class="muted">Spot a pattern? That's where we soften the routine.</span></div></details>`;
   if(carry.length){
-    h+=`<details class="sect"><summary><span class="sec-title">↪ Carried forward</span><span class="cnt">${carry.length}</span></summary>
+    h+=`<details class="sect" ${sAttr("w-carry")}><summary><span class="sec-title">↪ Carried forward</span><span class="cnt">${carry.length}</span></summary>
     <div class="card"><span class="muted">Not failures — just later. These roll into your weekend plan automatically.</span>
     ${carry.map(t=>`<div class="winline">${esc(t)}</div>`).join("")}</div></details>`;
   }
-  h+=`<details class="sect" open><summary><span class="sec-title">🏆 Work wins</span><span class="cnt">${wWins.length}</span>
+  h+=`<details class="sect" ${sAttr("w-work",true)}><summary><span class="sec-title">🏆 Work wins</span><span class="cnt">${wWins.length}</span>
     <button class="pill sm gold addwin" onclick="event.stopPropagation();event.preventDefault();promptWin('work')">+ add</button></summary><div class="card">`;
   h+=wWins.length?wWins.slice(0,30).map(w=>`<div class="winline"><span class="wd">${w.d}</span><br>${esc(w.t)}</div>`).join("")
     :`<p class="muted center">Finished a big project? Cleared the invoice pile? Sent a tough email? Log it here — it counts. 🏆</p>`;
-  h+=`</div></details><details class="sect"><summary><span class="sec-title">💛 You & ${esc(S.settings.partner)}</span><span class="cnt">${cWins.length}</span>
+  h+=`</div></details><details class="sect" ${sAttr("w-cpl")}><summary><span class="sec-title">💛 You & ${esc(S.settings.partner)}</span><span class="cnt">${cWins.length}</span>
     <button class="pill sm blushp addwin" onclick="event.stopPropagation();event.preventDefault();promptWin('couple')">+ add</button></summary><div class="card blush">`;
   h+=cWins.length?cWins.slice(0,30).map(w=>`<div class="winline"><span class="wd">${w.d}</span><br>${esc(w.t)} <span class="heart">♥</span></div>`).join("")
     :`<p class="muted center">Every evening, one little win for the two of you. It becomes a beautiful story.</p>`;
   h+=`</div></details>`;
   const grats=S.wins.filter(w=>w.type==="grat");
   if(grats.length){
-    h+=`<details class="sect"><summary><span class="sec-title">✨ Gratitude</span><span class="cnt">${grats.length}</span></summary><div class="card">`;
+    h+=`<details class="sect" ${sAttr("w-grat")}><summary><span class="sec-title">✨ Gratitude</span><span class="cnt">${grats.length}</span></summary><div class="card">`;
     h+=grats.slice(0,30).map(w=>`<div class="winline"><span class="wd">${w.d}</span><br>${esc(w.t)}</div>`).join("");
     h+=`</div></details>`;
   }
